@@ -23,7 +23,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-   output = "sniper:338 5",
+   output = "sniper:338 2",
    recipe = {{"default:copper_ingot", "", ""},
              {"technic:brass_ingot", "", ""},
              {"technic:brass_ingot", "", ""}}
