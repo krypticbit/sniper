@@ -94,14 +94,16 @@ function check_for_hold(dtime)
             privs["zoom"] = true
             minetest.set_player_privs(n, privs)
          end
-	  elseif not privs["keep_zoom"] and privs["zoom"] then
-	     privs["zoom"] = nil
-	     minetest.set_player_privs(n, privs)
-	     if player_crosshairs[n] then
+      else
+         if player_crosshairs[n] then
 	        p:hud_remove(player_crosshairs[n])
 	        player_crosshairs[n] = nil
 	        p:hud_set_flags({crosshair = true})
 	     end
+	     if not privs["keep_zoom"] and privs["zoom"] then
+	        privs["zoom"] = nil
+	        minetest.set_player_privs(n, privs)
+         end
       end
    end
 end
