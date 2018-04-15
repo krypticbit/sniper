@@ -135,7 +135,6 @@ minetest.register_craftitem("sniper:chromoly", {
 minetest.register_tool("sniper:artic_warfare", {
 	description = "Arctic Warfare (needs 338. to shoot | deals 130 dmg)",
 	inventory_image = "AW_inv.png",
-	wield_image = "AW_hand.png",
 	wield_scale = {x = 1, y = 1, z = 1},
 	on_use = function(itemstack, user, pointed_thing)
 		local inv = user:get_inventory()
