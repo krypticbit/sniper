@@ -35,6 +35,8 @@ function check_for_hold(dtime)
    end
 end
 
+
+
 minetest.register_craftitem("sniper:sniper_bullet", {
 	description = "Basic Sniper Bullet",
 	stack_max = 500,
@@ -74,54 +76,16 @@ local SNIPER_BULLET = {
 	textures = {'xtraores_titanium_shot.png'},
 	lastpos = {},
 	die = 3, -- penetration power
-	shotBy = "",
+	shot_by = "",
 	collisionbox = {0, 0, 0, 0, 0, 0},
-	on_step = function(self, dtime) bulletUpdate(self, dtime, 130) end
+	on_step = function(self, dtime) bulletUpdate(self, dtime, 130, "sniper:sniper_bullet") end
 }
-
-function bulletUpdate(s, dtime, damage)
-	local pos = s.object:getpos()
-	local node = minetest.get_node(pos)
-	local objs = minetest.get_objects_inside_radius({x = pos.x, y = pos.y, z = pos.z}, 2)
-	for k, obj in pairs(objs) do
-		if not (obj:is_player() and obj:get_player_name() == s.shotBy) then
-			if obj:get_luaentity() ~= nil then
-				local name = obj:get_luaentity().name
-				if name ~= "sniper:sniper_bullet" and name ~= "__builtin:item" then
-					obj:punch(s.object, 1.0, {
-						full_punch_interval = 1.0,
-						damage_groups= {fleshy = damage},
-					}, nil)
-					minetest.sound_play("default_dig_cracky", {pos = s.lastpos, gain = 0.8})
-					s.object:remove()
-				end
-			else
-				obj:punch(s.object, 1.0, {
-					full_punch_interval = 1.0,
-					damage_groups= {fleshy = damage},
-				}, nil)
-				minetest.sound_play("default_dig_cracky", {pos = s.lastpos, gain = 0.8})
-				s.object:remove()
-			end
-		end
-	end
-	if s.die <= 0 then
-		minetest.sound_play("default_dig_cracky", {pos = s.lastpos, gain = 0.8})
-		s.object:remove()
-	end
-	if s.lastpos.x ~= nil then
-		if minetest.registered_nodes[node.name].walkable then
-			s.die = s.die - 1
-		end
-	end
-	s.lastpos = {x = pos.x, y = pos.y, z = pos.z}
-end
 
 minetest.register_entity("sniper:sniper_bullet", SNIPER_BULLET)
 
 minetest.register_tool("sniper:sniper_rifle", {
 	description = "Basic Sniper Rifle",
-	inventory_image = "AW_inv.png",
+	inventory_image = "sniper.png",
 	wield_scale = {x = 1, y = 1, z = 1},
 	on_use = function(itemstack, user, pointed_thing)
 		local inv = user:get_inventory()
@@ -144,9 +108,9 @@ minetest.register_tool("sniper:sniper_rifle", {
 				obj:setacceleration({x=dir.x * -0, y=-0, z=dir.z * -0})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
+				ent.shot_by = user:get_player_name()
 				if ent then
 					ent.player = ent.player or user
-					ent.shotBy = user:get_player_name()
 				end
 			end
 		end

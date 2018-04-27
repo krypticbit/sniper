@@ -52,7 +52,6 @@ end
 
 local function get_formspec(part)
    -- Create item buttons
-   print (part)
    return "size[8,11]" ..
           image_table(gun_parts, 0, 0.5, 1, 4) ..
           "label[0,0;Please select an item:]" ..
